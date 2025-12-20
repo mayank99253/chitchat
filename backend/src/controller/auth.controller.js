@@ -1,12 +1,14 @@
 import User from "../models/User.js";
 import bcrypt from 'bcryptjs';
 import { generateToken } from "../lib/utils.js";
+import { sendWelcomeEmail } from "../emails/emailHandler.js";
+import { ENV } from "../lib/env.js";
 
 export const signup = async (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { fullName, email, password } = req.body;
 
   try {
-    if (!fullname || !email || !password) {
+    if (!fullName || !email || !password) {
       return res.status(400).json({ message: "All the Fields are Required" })
     }
 
@@ -26,22 +28,34 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
-      fullname,
+      fullName,
       email,
       password: hashedPassword
     })
 
     if (newUser) {
-      generateToken(newUser._id, res)
-      await newUser.save()
+      // before CR - coderabbit
+      // generateToken(newUser._id, res)
+      // await newUser.save()
 
+      //after CB 
+      //persist user first  , then issue auth cookie
+      const savedUser = await newUser.save();
+      generateToken(savedUser._id ,res)
       res.status(201).json({
         _id: newUser._id,
-        fullname: newUser.fullname,
+        fullName: newUser.fullName,
         email: newUser.email,
         profilePic: newUser.profilePic
       });
+
       // todo : sent a welcome email to the user 
+      try {
+        await sendWelcomeEmail(savedUser.email,savedUser.fullName,ENV.CLIENT_URL);
+      } catch (error) {
+        console.log("Failed to send Welcome Email to user" , error)
+      }
+
     } else {
       res.status(400).json({ message: "Invalid User Data" })
     }

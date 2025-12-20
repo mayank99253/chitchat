@@ -41,7 +41,7 @@ export const signup = async (req, res) => {
       //after CB 
       //persist user first  , then issue auth cookie
       const savedUser = await newUser.save();
-      generateToken(savedUser._id ,res)
+      generateToken(savedUser._id, res)
       res.status(201).json({
         _id: newUser._id,
         fullName: newUser.fullName,
@@ -51,9 +51,9 @@ export const signup = async (req, res) => {
 
       // todo : sent a welcome email to the user 
       try {
-        await sendWelcomeEmail(savedUser.email,savedUser.fullName,ENV.CLIENT_URL);
+        await sendWelcomeEmail(savedUser.email, savedUser.fullName, ENV.CLIENT_URL);
       } catch (error) {
-        console.log("Failed to send Welcome Email to user" , error)
+        console.log("Failed to send Welcome Email to user", error)
       }
 
     } else {
@@ -63,4 +63,35 @@ export const signup = async (req, res) => {
     console.log("Error in Sign up Controller ", error)
     res.status(500).json({ message: "Internal Server Error" })
   }
+}
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if(!email || !password)
+    return res.status(400).json({message : "Email or Password are Required"})
+  try {
+    const user = await User.findOne({ email })
+    if (!user) return res.status(400).json({ message: "Invalid Credentials" })
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password)
+    if (!isPasswordCorrect) return res.status(400).json({ message: "Incorrect Credentials" })
+
+    generateToken(user._id, res)
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+
+  } catch (error) {
+    console.error("Error in login controller : ", error);
+    res.status(500).json({ message: "Internal Server Error" })
+  }
+}
+export const logout = (_, res) => {
+  res.cookie("jwt", "", { maxAge: 0 })
+  res.status(200).json({ message: "Logged out Successfully" })
 }

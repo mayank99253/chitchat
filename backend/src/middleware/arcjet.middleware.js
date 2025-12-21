@@ -9,9 +9,9 @@ export const arcjetProtection = async (req, res, next) => {
                 return res.status(429).json({ message: "Rate Limit Extended , Please Try Again Later" })
             } else if (decision.reason.isBot()) {
                 return res.status(403).json({ message: "Bot Access Denied" })
-            } else {
-                return res.status(403).json({ message: "Access Denied By Security Policy" })
-            }
+             }else {
+                 return res.status(403).json({ message: "Access Denied By Security Policy" })
+             }
         } 
 
         // checked for spoofed bot 

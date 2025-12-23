@@ -51,7 +51,7 @@ const SignUpPage = () => {
                   {/*Heading Text Close  */}
 
                   {/* From Start */}
-                  <form onSubmit={handlesubmit} className='space-y-6'>
+                  <form onSubmit={handlesubmit} className='space-y-4'>
                     {/* Full Name */}
                     <div>
                       <label className='auth-input-label'>Full Name</label>

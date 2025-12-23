@@ -6,7 +6,7 @@ import { Link } from 'react-router'
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" })
-  const { login, isLogginIn } = useAuthStore()
+  const { login, isLoggingIn } = useAuthStore()
 
   const handlesubmit = (e) => {
     e.preventDefault();
@@ -88,11 +88,11 @@ const LoginPage = () => {
                     <button
                       className='auth-btn relative overflow-hidden group'
                       type='submit'
-                      disabled={isLogginIn}
+                      disabled={isLoggingIn}
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-pink-500 opacity-0 group-hover:opacity-20 transition" />
 
-                      {isLogginIn ? (
+                      {isLoggingIn ? (
                         <LoaderIcon className='w-full h-5 animate-spin text-center' />
                       ) : (
                         "Sign In "
@@ -103,7 +103,7 @@ const LoginPage = () => {
 
                   <div className='mt-6 text-center'>
                     <Link to="/signup" className="auth-link">
-                      Don't have any acoount? Sign Up
+                      Don't have any account? Sign Up
                     </Link>
                   </div>
 

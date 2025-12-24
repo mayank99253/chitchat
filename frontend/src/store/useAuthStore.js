@@ -7,7 +7,7 @@ export const useAuthStore = create((set) => ({
   authUser: null,
   isCheckingAuth: true,
   isSigningUp: false,
-  isLoggingIn: false, 
+  isLoggingIn: false,
 
   checkAuth: async () => {
     try {
@@ -37,29 +37,39 @@ export const useAuthStore = create((set) => ({
   },
 
   login: async (data) => {
-    set({isLoggingIn:true})
+    set({ isLoggingIn: true })
     try {
-      const res = await axiosInstance.post("/auth/login",data)
-      set({authUser:res.data})
+      const res = await axiosInstance.post("/auth/login", data)
+      set({ authUser: res.data })
 
       toast.success("Logged In Successfully")
     } catch (error) {
       toast.error(error.response.data.message)
     }
-    finally{
-      set({isLoggingIn:false})
+    finally {
+      set({ isLoggingIn: false })
     }
   },
 
-  logout :async()=>{
+  logout: async () => {
     try {
       await axiosInstance.post("/auth/logout")
-      set({authUser:null})
+      set({ authUser: null })
       toast.success("Logged out Successfully")
     } catch (error) {
       toast.error("Error logging out")
-      console.log("Logged Error ",error)
+      console.log("Logged Error ", error)
+    }
+  },
+
+  updateProfile: async (data) => {
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", data);
+      set({ authUser: res.data })
+      toast.success("Profile Updated Successfully")
+    } catch (error) {
+      console.log("Error in Update Profile", error);
+      toast.error(error.response.data.message)
     }
   }
-
 }));

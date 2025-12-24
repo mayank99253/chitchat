@@ -18,13 +18,13 @@ function Chatslist() {
       {chats.map((chat)=>(
         <div 
         key={chat._id}
-        className='bg-cyan-500/10 p-4 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors'
+        className='bg-cyan-500/10 p-2 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors'
         onClick={()=>setSelectedUser(chat)}
         >
           <div className='flex items-center gap-3'>
             {/* TODO - FIX IT MAKE IT ONLINE STATUS AND MAKE IT WORK WITH SOCKET */}
             <div className={`avatar online`}>
-              <div className='size-12 rounded-full'>
+              <div className='size-10 rounded-full'>
                 <img src={chat.profilePic || "/avatar.png"} alt={chat.fullName} />
               </div>
             </div>

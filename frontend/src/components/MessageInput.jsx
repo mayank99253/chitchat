@@ -30,13 +30,13 @@ export const MessageInput = () => {
 
   const handleImageChange = (e)=>{
     const file  = e.target.files[0]
-    if(!file.type.startswith("/image")){
+    if(!file.type.startsWith("image/")){
       toast.error("Please Select an Image File ")
       return ;
     }
-    const render = new FileReader()
-    render.onloadend = () => setImagePreview(render.result);
-    render.readAsDataURL(file)
+    const reader = new FileReader()
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file)
   }
 
   const removeImage = ()=>{
@@ -57,8 +57,9 @@ export const MessageInput = () => {
             <button
             onClick={removeImage}
             className='absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-200 hover:bg-slate-700'
-            >
-
+            
+            type='button'>
+              <XIcon className="w-4 h-4" />
             </button>
           </div>
         </div>

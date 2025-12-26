@@ -3,6 +3,8 @@ import axiosInstance from "../lib/axios";
 import toast from "react-hot-toast";
 import { useAuthStore } from "./useAuthStore";
 
+
+const notificationSound = new Audio("/sounds/notification.mp3")
 export const useChatStore = create((set, get) => ({
     allContacts: [],
     chats: [],
@@ -45,43 +47,65 @@ export const useChatStore = create((set, get) => ({
         }
     },
 
-    getMessagesByUserId: async(userId)=>{
-        set({isMessagesLoading:true})
+    getMessagesByUserId: async (userId) => {
+        set({ isMessagesLoading: true })
         try {
             const res = await axiosInstance.get(`/messages/${userId}`)
-            set({messages:res.data})
+            set({ messages: res.data })
         } catch (error) {
             toast.error(error.response?.data?.message || "Something Went Wrong")
-        }finally{
-            set({isMessagesLoading:false})
+        } finally {
+            set({ isMessagesLoading: false })
         }
     },
-     sendMessage: async (messageData) => {
-    const { selectedUser, messages } = get();
-    const { authUser } = useAuthStore.getState();
+    sendMessage: async (messageData) => {
+        const { selectedUser, messages } = get();
+        const { authUser } = useAuthStore.getState();
 
-    const tempId = `temp-${Date.now()}`;
+        const tempId = `temp-${Date.now()}`;
 
-    const optimisticMessage = {
-      _id: tempId,
-      senderId: authUser._id,
-      receiverId: selectedUser._id,
-      text: messageData.text,
-      image: messageData.image,
-      createdAt: new Date().toISOString(),
-      isOptimistic: true, // flag to identify optimistic messages (optional)
-    };
-    // immidetaly update the ui by adding the message
-    set({ messages: [...messages, optimisticMessage] });
+        const optimisticMessage = {
+            _id: tempId,
+            senderId: authUser._id,
+            receiverId: selectedUser._id,
+            text: messageData.text,
+            image: messageData.image,
+            createdAt: new Date().toISOString(),
+            isOptimistic: true, // flag to identify optimistic messages (optional)
+        };
+        // immidetaly update the ui by adding the message
+        set({ messages: [...messages, optimisticMessage] });
 
-    try {
-      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
-      set({ messages: messages.concat(res.data) });
-    } catch (error) {
-      // remove optimistic message on failure
-      set({ messages: messages });
-      toast.error(error.response?.data?.message || "Something went wrong");
+        try {
+            const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+            set({ messages: messages.concat(res.data) });
+        } catch (error) {
+            // remove optimistic message on failure
+            set({ messages: messages });
+            toast.error(error.response?.data?.message || "Something went wrong");
+        }
+    },
+
+    subcribeToMessage : ()=>{
+        const { selectedUser , isSoundEnabled } = get();
+        if(!selectedUser) return ;
+
+        const socket = useAuthStore.getState().socket
+
+        socket.on("newMessage", (newMessage)=>{
+            const currentMessages = get().messages;
+            set({ messages : [...currentMessages,newMessage]})
+
+            if(isSoundEnabled){
+                notificationSound.currentTime= 0
+                notificationSound.play().catch((e)=> console.log("Audio play Failed",e))
+            }
+        })
+    },
+
+    unsubcribeToMessage : ()=>{
+        const socket = useAuthStore.getState().socket;
+        socket.off("newMessage")
     }
-  },
 
 }))

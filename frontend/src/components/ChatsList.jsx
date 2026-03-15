@@ -4,7 +4,7 @@ import NoChatsFound from './NochatsFound';
 import UsersLoadingSkeleton from './UsersLoadingSkeleton';
 import { useAuthStore } from '../store/useAuthStore';
 
-function Chatslist() {
+function ChatsList() {
   const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } = useChatStore()
   const {onlineUsers} = useAuthStore()
   useEffect(() => {
@@ -36,4 +36,4 @@ function Chatslist() {
     </>
   )
 }
-export default Chatslist
+export default ChatsList

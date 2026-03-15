@@ -3,7 +3,7 @@ import { useChatStore } from '../store/useChatStore'
 import ActiveTabSwitch from '../components/ActiveTabSwitch'
 import { ChatContainer } from '../components/ChatContainer'
 import NoConversationPlaceholder from '../components/NoConversationPlaceholder'
-import Chatslist from '../components/Chatslist'
+import ChatsList from '../components/ChatsList'
 import { ContactList } from '../components/ContactList'
 import BorderAnimatedContainer from '../components/BorderAnimateContainer'
 import ProfileHeader from '../components/ProfileHeader'
@@ -34,7 +34,7 @@ const ChatPage = () => {
               <ActiveTabSwitch />
 
               <div className='flex-1 overflow-auto p-4 space-y-2'>
-                {activeTab === "chats" ? <Chatslist /> : <ContactList />}
+                {activeTab === "chats" ? <ChatsList /> : <ContactList />}
               </div>
             </div>
 

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import useKeyboardSound from '../hooks/useKeyBoardSound'
 import { useChatStore } from '../store/useChatStore'
 import toast from 'react-hot-toast'
-import { ImageIcon, SendIcon } from 'lucide-react'
+import { ImageIcon, SendIcon, XIcon } from 'lucide-react'
 
 export const MessageInput = () => {
 
@@ -28,62 +28,71 @@ export const MessageInput = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
-  const handleImageChange = (e)=>{
-    const file  = e.target.files[0]
-    if(!file.type.startsWith("image/")){
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (!file.type.startsWith("image/")) {
       toast.error("Please Select an Image File ")
-      return ;
+      return;
     }
     const reader = new FileReader()
     reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file)
   }
 
-  const removeImage = ()=>{
+  const removeImage = () => {
     setImagePreview(null)
-    if(fileInputRef.current) fileInputRef.current.value = ""
+    if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
-  return (
-    <div className='p-4 border-t border-slate-700/50'>
+   return (
+    <div className="p-4 border-t border-slate-700/50">
       {imagePreview && (
-        <div className='max-w-xl mx-auto mb-3 flex items-center'>
-          <div className='relative'>
-            <img 
-            src={imagePreview}
-            alt="Preview"
-            className='w-20 h-20 object-cover rounded-lg border border-slate-700' 
+        <div className="max-w-3xl mx-auto mb-3 flex items-center">
+          <div className="relative">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-20 h-20 object-cover rounded-lg border border-slate-700"
             />
             <button
-            onClick={removeImage}
-            className='absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-200 hover:bg-slate-700'
-            
-            type='button'>
+              onClick={removeImage}
+              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-200 hover:bg-slate-700"
+              type="button"
+            >
               <XIcon className="w-4 h-4" />
             </button>
           </div>
         </div>
       )}
-      <form onSubmit={handleSendMessage} className='max-w-3xl mx-auto flex space-x-4'>
 
-        <input 
-        type="text" 
-        value={text}
-        onChange={(e)=>{
-          setText(e.target.value);
-          isSoundEnabled && playRandomStrokeSound()
-        }}
-        className='flex-1 bg-slate-800/50 border border-slate-700/50 rounded-lg py-2 px-4'
-        placeholder='Type Your Message'
+      <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto flex space-x-4">
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+            isSoundEnabled && playRandomStrokeSound();
+          }}
+          className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-lg py-2 px-4"
+          placeholder="Type your message..."
         />
 
-        <button 
-        type="button"
-        onClick={()=> fileInputRef.current?.click()}
-        className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors
-          ${imagePreview ? "text-cyan-500" : ""}`}
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          className="hidden"
+        />
+
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors ${
+            imagePreview ? "text-cyan-500" : ""
+          }`}
         >
-        <ImageIcon className='w-5 h-5' />
+          <ImageIcon className="w-5 h-5" />
         </button>
         <button
           type="submit"
@@ -94,5 +103,5 @@ export const MessageInput = () => {
         </button>
       </form>
     </div>
-  )
+  );
 }

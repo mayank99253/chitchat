@@ -1,8 +1,8 @@
 import React from 'react'
 import { useChatStore } from '../store/useChatStore'
-import  ActiveTabSwitch  from '../components/ActiveTabSwitch'
+import ActiveTabSwitch from '../components/ActiveTabSwitch'
 import { ChatContainer } from '../components/ChatContainer'
-import  NoConversationPlaceholder  from '../components/NoConversationPlaceholder'
+import NoConversationPlaceholder from '../components/NoConversationPlaceholder'
 import Chatslist from '../components/Chatslist'
 import { ContactList } from '../components/ContactList'
 import BorderAnimatedContainer from '../components/BorderAnimateContainer'
@@ -24,7 +24,6 @@ const ChatPage = () => {
 
       {/* ACTUAL CONTENT */}
       <div className="relative z-10 w-full flex justify-center items-center p-4">
-        {/* 👇 tumhara existing content yahin rahega */}
 
         <div className="w-full max-w-4xl">
           <BorderAnimatedContainer className="h-[520px] md:h-[560px]">
@@ -41,9 +40,10 @@ const ChatPage = () => {
 
             {/* RIGHT SIDE */}
 
-            <div className='h-full flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm'>
+            <div className='h-full flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm overflow-hidden'>
               {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />}
             </div>
+
           </BorderAnimatedContainer>
         </div>
       </div>

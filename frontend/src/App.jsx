@@ -7,6 +7,7 @@ import { useAuthStore } from './store/useAuthStore'
 import PageLoader from './components/PageLoader'
 import {Toaster} from 'react-hot-toast'
 
+
 function App() {
   const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
 

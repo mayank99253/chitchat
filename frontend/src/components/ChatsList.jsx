@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useChatStore } from '../store/useChatStore'
-import NoChatsFound from './NochatsFound';
+import NoChatsFound from './NoChatsFound';
 import UsersLoadingSkeleton from './UsersLoadingSkeleton';
 import { useAuthStore } from '../store/useAuthStore';
 
